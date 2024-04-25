@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/assets/php/helpers.php';
+
+$user = currentUser();
+?>
+
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -48,22 +55,69 @@
 					</form>
  				</div>
 
-				<div class="sidebar">
-					<h2>Вход</h2>
-					<form method="post" action="#" id="login">
-						<input type="text" name="login_field" placeholder="логин" />
-						<input type="password" name="password_field" placeholder="пароль" />
-						<input type="submit" class="btn" value="войти" />
-						
-						<div class="lables_passreg_text">
-							<span><a href="#">забыли пароль?</a></span> | <span><a href="#">регистрация</a></span>
-						</div>
-					</form>
-				</div>
+				<?php
+				 if ($user === false) {
+					// Пользователь не авторизован
+				?>
+					<div class="sidebar">
+						<h2>Вход</h2>
+						<form method="post" action="assets/php/login.php" id="name">
+							<?php if(hasMessage('error')): ?>
+								<div class="notice error"><?php echo getMessage('error') ?></div>
+							<?php endif; ?>
+
+							<label for="email">
+								Mail
+								</br><input
+									type="text"
+									id="email"
+									name="email"
+									placeholder="ivan@areaweb.su"
+									value="<?php echo old('email') ?>"
+									<?php echo validationErrorAttr('email'); ?>
+								>
+								<?php if(hasValidationError('email')): ?>
+									<small><?php echo validationErrorMessage('email'); ?></small>
+								<?php endif; ?>
+							</label></br>
+
+							<label for="password">
+								Пароль
+								</br><input
+									type="password"
+									id="password"
+									name="password"
+									placeholder="******"
+								>
+							</label></br>
+							<input 
+								type="submit" 
+								name="name_btn" 
+								class="btn" 
+								value="войти" />
+								
+							<div class="lables_passreg_text">
+								<span><a href="#">забыли пароль?</a></span> | <span><a href="/registration.php">регистрация</a></span>
+							</div>
+						</form>
+					</div>
+				<?php
+				} else {
+					// Пользователь авторизован
+				?>
+					<div class="sidebar">
+						<h2>Привет, <?php echo $user['name'] ?>!</h2>
+						<form action="assets/php/logout.php" method="post">
+							<button role="button">Выйти из аккаунта</button>
+						</form>
+					</div>
+				<?php
+				}
+				?>
 
 				<div class="sidebar">
 					<h2>Новости</h2>
-					<span>31.02.2018</span>
+					<span>10.04.2024</span>
 					<p>Мы запустили расширенный поиск</p>
 					<a href="#">читать</a>
 				</div>
@@ -90,7 +144,7 @@
 					<a href="#"><img src="assets/img/inter.png"></a>
 					<a href="#"><img src="assets/img/cloud.png"></a>
 
-				</div>88
+				</div>
 			
 			</div>
 
@@ -105,7 +159,7 @@
 			<a href="#">Рейтинг фильмов</a> |
 			<a href="#">Контакты</a> 
 		</p>
-		<p>wh-db.com 2015</p>
+		<p>wh-db.com 2024</p>
 	</div>
 	</div>
 	

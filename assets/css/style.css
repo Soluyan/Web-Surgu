@@ -10,6 +10,7 @@ body {
 	color: #555;
 }
 
+
 p {
 	padding: 0 0 20px 0;
 	line-height: 1.7em;
@@ -179,13 +180,23 @@ ul.menu li a:hover {
 .content {
 	text-align: left;
 	width: 620px;
-	padding: 0 0 0 5px;
+	padding: 0 0 0 0px;
 	float: left;
 }
 
-.content a {
+
+.registration {
+	text-align: left;
+	width: 520px;
+	padding: 0 0 0 0px;
+	float: left;
+}
+
+.registration label {
 	text-decoration: none;
 }
+
+
 
 .films_block {
 	margin-bottom: 5%;	
