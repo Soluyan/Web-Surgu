@@ -1,10 +1,3 @@
-<?php
-require_once __DIR__ . '/assets/php/helpers.php';
-
-$user = currentUser();
-?>
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -14,7 +7,25 @@ $user = currentUser();
 	<meta name="keywords" content="фильмы, фильмы онлайн,hd"/>
 	<link rel="stylesheet" href="assets/css/style.css">
 </head>
+
+<script>
+	document.getElementById('login').addEventListener('submit', function(event) {
+		var password = document.getElementById('password').value;
+		var passwordError = document.getElementById('password-error');
+		
+		if (!/(?=.*\d)(?=.*[a-zA-Z]).{8,}/.test(password)) {
+			event.preventDefault();
+			passwordError.style.display = 'block';
+		} else {
+			passwordError.style.display = 'none';
+		}
+	});
+</script>
+
 <body>
+	<div id="preloader">
+		<img src="assets/img/preloader.gif" alt="Loading...">
+	</div>
 
 	<div class="main">
 		
@@ -55,17 +66,9 @@ $user = currentUser();
 					</form>
  				</div>
 
-				<?php
-				 if ($user === false) {
-					// Пользователь не авторизован
-				?>
 					<div class="sidebar">
-						<h2>Вход</h2>
-						<form method="post" action="assets/php/login.php" id="name">
-							<?php if(hasMessage('error')): ?>
-								<div class="notice error"><?php echo getMessage('error') ?></div>
-							<?php endif; ?>
-
+						<form method="post" action="#" id="login">
+							<h2>Вход</h2>
 							<label for="email">
 								Mail
 								</br><input
@@ -73,12 +76,8 @@ $user = currentUser();
 									id="email"
 									name="email"
 									placeholder="ivan@areaweb.su"
-									value="<?php echo old('email') ?>"
-									<?php echo validationErrorAttr('email'); ?>
+									value=""
 								>
-								<?php if(hasValidationError('email')): ?>
-									<small><?php echo validationErrorMessage('email'); ?></small>
-								<?php endif; ?>
 							</label></br>
 
 							<label for="password">
@@ -88,8 +87,12 @@ $user = currentUser();
 									id="password"
 									name="password"
 									placeholder="******"
+									pattern="(?=.*\d)(?=.*[a-zA-Z]).{8,}"
+									title="Пароль должен содержать минимум 8 символов, включая как минимум 1 букву и 1 цифру"
+									required
 								>
 							</label></br>
+							<span id="password-error" style="color: red; display: none;">Пароль не соответствует требованиям</span>
 							<input 
 								type="submit" 
 								name="name_btn" 
@@ -101,19 +104,44 @@ $user = currentUser();
 							</div>
 						</form>
 					</div>
-				<?php
-				} else {
-					// Пользователь авторизован
-				?>
-					<div class="sidebar">
-						<h2>Привет, <?php echo $user['name'] ?>!</h2>
-						<form action="assets/php/logout.php" method="post">
-							<button role="button">Выйти из аккаунта</button>
-						</form>
-					</div>
-				<?php
-				}
-				?>
+
+
+					<script>
+						document.getElementById('login').addEventListener('submit', function(event) {
+							event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+						
+							var email = document.getElementById('email').value;
+							var password = document.getElementById('password').value;
+							var loginForm = document.getElementById('login');
+							var sidebar = loginForm.parentNode;
+						
+							// Проверяем введенные данные
+							if (email === 'ivan@mail.com' && password === '12345678a') {
+								var newDiv = document.createElement('div');
+								newDiv.className = 'sidebar';
+						
+								var h2 = document.createElement('h2');
+								h2.textContent = 'Привет, ivan!';
+								newDiv.appendChild(h2);
+						
+								var form = document.createElement('form');
+								form.action = '#';
+								form.method = 'post';
+						
+								var button = document.createElement('button');
+								button.setAttribute('role', 'button');
+								button.textContent = 'Выйти из аккаунта';
+								form.appendChild(button);
+						
+								newDiv.appendChild(form);
+						
+								sidebar.replaceChild(newDiv, loginForm);
+							} else {
+								alert('Неправильный email или пароль');
+							}
+						});
+						</script>
+
 
 				<div class="sidebar">
 					<h2>Новости</h2>
@@ -163,5 +191,31 @@ $user = currentUser();
 	</div>
 	</div>
 	
+
+	<script>
+		function hidePreloader() {
+			document.body.classList.add('loaded');
+		}
+		
+		window.addEventListener('load', function() {
+			setTimeout(hidePreloader, 500);
+		});
+		
+		function loadContent() {
+			return new Promise((resolve) => {
+				// Имитация загрузки контента
+				setTimeout(() => {
+					console.log('Контент загружен');
+					resolve();
+				}, 2000);
+			});
+		}
+		
+		document.addEventListener('DOMContentLoaded', function() {
+			loadContent().then(() => {
+				hidePreloader();
+			});
+		});
+		</script>
 </body>
 </html>
